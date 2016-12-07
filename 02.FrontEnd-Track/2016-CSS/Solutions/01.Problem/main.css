@@ -1,0 +1,74 @@
+﻿#root {
+    width: 720px;
+    height: 590px;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    background-color: #777777;
+}
+
+.remark {
+    display: none;
+}
+
+.header {
+    color: #CCCCCC;
+    text-align: center;
+    margin-top: 10px;
+    text-shadow: 2px 2px black;
+    font-size: 30px;
+    font-weight: 100;
+}
+
+h1{
+    padding-top: 18px;
+}
+h2 {
+    color: #CCCCCC;
+    text-decoration: underline;
+    font-size: 20px;
+    text-shadow: 2px 2px black;
+    display: inline-block;
+    float: right;
+    margin-right: 15px;
+}
+
+img {
+    border: 1px solid white;
+    border-radius: 150px;
+    width: 30px;
+    float: left;
+    margin-left: 70px;
+}
+
+.hero-item {
+    border: 1px solid white;
+    border-radius: 6px;
+    box-shadow: 3px 3px black;
+    width: 320px;
+    height: 180px;
+    list-style: none;
+    display: inline-block;
+    margin: 3px;
+}
+
+    .hero-item .description {
+        display: block;
+        margin-top: 35px;
+        padding: 10px;
+    }
+
+strong {
+    color: #CCCCCC;
+    font-size: 18px;
+    text-shadow: 2px 2px black;
+}
+
+heroes-list {
+    display: inline-block;
+}
+
+.hero-item:last-of-type {
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 6px;
+}

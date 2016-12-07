@@ -1,0 +1,66 @@
+﻿#root {
+    width: 1024px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+img {
+    display: none;
+}
+
+.superheroes {
+    list-style: none;
+}
+
+.hero-header:hover img{
+    display: block;
+}
+
+.hero-header:hover {
+    text-shadow: 2px 2px #973A3A;
+    cursor: pointer;
+}
+
+#site-header:before {
+    content: url(imgs/logo.png);
+}
+
+//li:hover:before{
+    content: url(imgs/logo.png);
+}
+
+li{
+    border-bottom: 1px solid black;
+    width: 180px;
+    padding: 15px;
+    position:
+}
+
+li:last-of-type{
+    border: none;
+}
+
+li:hover img{
+    display: block;
+    position: absolute;
+    margin-left: 180px;
+    margin-top: -20px;
+    border: 3px solid #973A3A;
+    border-radius: 15px;
+    width: 200px;
+}
+a{
+    display: none;
+    position: absolute;
+    margin-left: 180px;
+    margin-top: 168px;
+    color: white;
+    font-weight: bold;
+    background-color: grey;
+    width: 205px;
+    text-align:center;
+    opacity: 0.6;
+}
+
+li:hover a{
+    display: block;
+}

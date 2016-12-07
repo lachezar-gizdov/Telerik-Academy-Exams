@@ -1,0 +1,2 @@
+how many digits does this numeral system have? Is there an appropriate built-in functionality?
+String.Repl
