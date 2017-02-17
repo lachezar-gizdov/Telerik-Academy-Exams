@@ -144,7 +144,7 @@ namespace PackageManager.Repositories
         // Temporary method for test
         private void AddPackage()
         {
-            this.packages.Add(new Package("test", new PackageVersion(1, 1, 1, VersionType.alpha)));
+            //this.packages.Add(new Package("test", new PackageVersion(1, 1, 1, VersionType.alpha)));
         }
     }
 }

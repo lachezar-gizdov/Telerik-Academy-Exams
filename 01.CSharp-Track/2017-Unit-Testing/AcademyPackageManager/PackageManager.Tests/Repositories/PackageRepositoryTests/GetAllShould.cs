@@ -19,9 +19,9 @@
             var sut = new PackageRepository(loggerMock, packagesMock);
 
             //Act
-            //var result = sut.GetAll();
+            var result = sut.GetAll();
 
-            ////Assert
+            //Assert
             //Assert.AreEqual(0, result);
         }
     }
