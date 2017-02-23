@@ -135,16 +135,16 @@ namespace PackageManager.Repositories
         public IEnumerable<IPackage> GetAll()
         {
             #region
-            this.AddPackage();
+            //this.AddPackage();
             #endregion
             this.logger.Log("All packages");
-            return this.packages;
+            return new List<IPackage>(this.packages);
         }
 
         // Temporary method for test
         private void AddPackage()
         {
-            //this.packages.Add(new Package("test", new PackageVersion(1, 1, 1, VersionType.alpha)));
+            this.packages.Add(new Package("test", new PackageVersion(1, 1, 1, VersionType.alpha)));
         }
     }
 }
