@@ -152,13 +152,13 @@ function solve() {
 				.sort((x, y) => x.name.toLowerCase().localeCompare(y.name.toLowerCase()));
 		}
 		listMostRecentApps(count) {
-			if (count === null || typeof count === 'undefined') {
+			if (typeof count === 'undefined') {
 				count = 10;
 			}
 			return this.apps.slice(0, count - 1);
 		}
 		listMostPopularApps(count) {
-			if (count === null || typeof count === 'undefined') {
+			if (typeof count === 'undefined') {
 				count = 10;
 			}
 			let sorted = this.apps.sort((x, y) => {
