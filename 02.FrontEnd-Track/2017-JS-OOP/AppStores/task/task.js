@@ -4,6 +4,7 @@ function solve() {
 		if (value.length < 1 || value.length > upperLimit) {
 			throw Error('Invalid name length!');
 		}
+
 		if (!value.match(/^[a-zA-Z0-9 ]/)) {
 			throw Error('Invalid App name!');
 		}
@@ -30,8 +31,10 @@ function solve() {
 			description: app.description,
 			version: app.version,
 			rating: app.rating,
+			apps: app.apps
 		};
 	}
+
 	class App {
 		constructor(name, description, version, rating) {
 			validateIfValueIsString(name);
@@ -48,117 +51,116 @@ function solve() {
 		get name() {
 			return this._name;
 		}
+
 		get description() {
 			return this._description;
 		}
+
 		get version() {
 			return this._version;
 		}
+
 		get rating() {
 			return this._rating;
 		}
-		release(options) {
 
-			switch (typeof options) {
-				case 'number':
-					if (options <= this.version) {
-						throw Error('Older version!');
-					}
-					this._version = options;
-					break;
-				case 'object':
-					if (options.hasOwnProperty('version')) {
-						if (typeof options.version === 'number' && this._version < options.version) {
-							this._version = options.version;
-							if (options.hasOwnProperty('description')) {
-								if (typeof options.description === 'string') {
-									this._description = options.description;
-								}
-								else {
-									throw Error('Invalid Description!');
-								}
-							}
-							if (options.hasOwnProperty('rating')) {
-								if (typeof options.rating === 'number' && options.rating > 0 && options.rating <= 10) {
-									this._rating = options.rating;
-								}
-								else {
-									throw Error('Invalid rating!');
-								}
-							}
-						} else {
-							throw Error('Invalid new version!');
-						}
-					} else {
-						throw Error('Invalid new version!');
-					}
-					break;
-				default:
-					throw Error('Not valid!');
+		release(options) {
+			if (typeof options !== 'object') {
+				options = { version: options };
 			}
+
+			validateIfValueIsNumber(options.version);
+			if (this._version >= options.version) {
+				throw Error('Version must be newer!');
+			}
+
+			this._version = options.version;
+
+			if (options.hasOwnProperty('description')) {
+				validateIfValueIsString(options.description);
+				this._description = options.description;
+			}
+
+			if (options.hasOwnProperty('rating')) {
+				validateRatingIfInRange(options.rating);
+				this._rating = options.rating;
+			}
+
+			return this;
 		}
 	}
+
 	class Store extends App {
 		constructor(name, description, version, rating) {
 			super(name, description, version, rating);
 			this._apps = [];
 		}
+
 		get apps() {
 			return this._apps;
 		}
-		set apps(value) {
-			this._apps = value;
-		}
+
 		uploadApp(app) {
 			if (!(app instanceof App)) {
 				throw Error('app must be App object!');
 			}
+
 			let index = this._apps.findIndex(a => a.name === app.name);
-			if (index === -1) {
-				this._apps.push(createApp(app));
-			} else {
-				if (this._apps[index].version < app.version) {
-					this._apps[index].description = app.description;
-					this._apps[index].rating = app.rating;
-				}
-				else {
-					throw Error('App is already up to date!');
-				}
+
+			if (index >= 0) {
+				this._apps.splice(index, 1);
 			}
+
+			this._apps.push(createApp(app));
+
 			return this;
 		}
-		takedownApp(app) {
-			let index = this.apps.findIndex(a => a.name === app.name);
+
+		takedownApp(name) {
+			let index = this._apps.findIndex(a => a.name === name);
+
 			if (index < 0) {
 				throw Error('App not found!');
 			}
-			this.apps.splice(index, 0);
+
+			this._apps.splice(index, 1);
+
 			return this;
 		}
+
 		search(pattern) {
-			return this.apps
-				.filter(a => a.name.includes(pattern.toLowerCase()))
-				.sort((x, y) => x.name.toLowerCase().localeCompare(y.name.toLowerCase()));
+			pattern = pattern.toLowerCase();
+
+			return (this._apps
+				.filter(a => a.name.toLowerCase().indexOf(pattern) >= 0)
+				.sort((x, y) => x.name.localeCompare(y.name)));
 		}
+
 		listMostRecentApps(count) {
 			if (typeof count === 'undefined') {
 				count = 10;
 			}
-			return this.apps.slice(0, count - 1);
+
+			return this._apps.reverse().slice(0, count);
 		}
+
 		listMostPopularApps(count) {
 			if (typeof count === 'undefined') {
 				count = 10;
 			}
-			let sorted = this.apps.sort((x, y) => {
+
+			let sorted = this._apps.sort((x, y) => {
 				if (x.name === y.name) {
 					return x.time - y.time;
 				}
+
 				return x.name.localeCompare(y.name);
 			});
-			return this.apps.slice(0, count + 1);
+
+			return this._apps.slice(0, count);
 		}
 	}
+
 	class Device {
 		constructor(hostname, apps) {
 			validateIfValueIsString(hostname);
@@ -167,66 +169,106 @@ function solve() {
 			if (!(Array.isArray(apps))) {
 				throw Error('Invalid app collection!');
 			}
+
 			if (!apps.every(a => a instanceof App)) {
 				throw Error('There is un Invalid app in the passed collection!');
 			}
+
 			this._hostname = hostname;
 			this._apps = [];
+			this._stores = apps.filter(x => x instanceof Store).map(x => createApp(x));
 		}
+
 		get hostname() {
 			return this._hostname;
 		}
+
 		get apps() {
 			return this._apps;
 		}
+
 		search(pattern) {
-			let stores = this.apps.filter(a => a instanceof Store),
-				result = [],
-				foundInCurrStore = [];
-			stores.forEach(function (element) {
-				foundInCurrStore = element
-					.filter(a => a.name.includes(pattern.toLowerCase()))
-					.sort((x, y) => x.name.toLowerCase()
-						.localeCompare(y.name.toLowerCase()));
-				result = [...result, ...foundInCurrStore];
+			pattern = pattern.toLowerCase();
+			let result = {};
+
+			this._stores.forEach(store => {
+				store.apps.forEach(x => {
+					if (x.name.toLowerCase().indexOf(pattern) < 0) {
+						return;
+					}
+
+					if (result.hasOwnProperty(x.name) && x.version <= result[x.name].version) {
+						return;
+					}
+
+					result[x.name] = x;
+				});
 			});
-			return result;
+
+			return Object.keys(result).sort().map(key => result[key]);
+
 		}
 		install(name) {
-			let stores = this.apps.filter(a => a instanceof Store),
-				found = false,
-				foundApp = {},
-				ver = 0;
-			stores.forEach(function (element) {
-				var index = element.apps.findIndex(a => a.name === name) < 0;
-				if (index >= 0) {
-					found = true;
-					if (ver <= element[index].ver) {
-						foundApp = element[index];
-						ver = element[index].ver;
-					}
-				}
-			});
-			if (!found) {
-				throw Error('App with that name cannot be found in all stores!');
-			}
-			this.apps.push(foundApp);
+			let bestApp = { version: -1 };
 
+			this._stores.forEach(store => {
+				let currApp = store.apps.find(a => a.name === name);
+
+				if (currApp && bestApp.version < currApp.version) {
+					bestApp = currApp;
+				}
+
+			});
+
+			if (bestApp.version < 0) {
+				throw Error('App not found!');
+			}
+
+			if (this._apps.every(a => a.name !== name)) {
+				this._apps.push(createApp(bestApp));
+
+				if (bestApp instanceof Store) {
+					this._stores.push(createApp(bestApp));
+				}
+			}
 			return this;
 		}
 		uninstall(name) {
-			let index = this.apps.indexOf(a => a.name === name);
+			let index = this._apps.findIndex(a => a.name === name);
+
 			if (index < 0) {
 				throw Error('App not found!');
 			}
 
-			this.apps.splice(index, 1);
+			this._apps.splice(index, 1);
+
+			index = this._stores.findIndex(s => s.name === name);
+
+			if (index >= 0) {
+				this._stores.splice(index, 1);
+			}
+
 			return this;
 		}
 		listInstalled() {
-			return this.apps.sort((x, y) => x.name.localeCompare(y.name));
+			return (this._apps.slice().sort((x, y) => x.name.localeCompare(y.name)));
 		}
 		update() {
+			this._apps = this._apps.map(app => {
+				const name = app.name;
+
+				let bestApp = app;
+
+				this._stores.forEach(store => {
+					const currApp = store.apps.find(x => x.name === name);
+					
+					if (currApp && bestApp.version < currApp.version) {
+						bestApp = currApp;
+					}
+				});
+
+				return bestApp;
+			});
 
 			return this;
 		}
