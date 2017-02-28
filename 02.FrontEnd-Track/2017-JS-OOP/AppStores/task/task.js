@@ -58,39 +58,43 @@ function solve() {
 			return this._rating;
 		}
 		release(options) {
-			if (typeof options === 'number' && options <= this.version) {
-				throw Error('Older version!');
-			}
-			if (typeof options === 'number') {
-				this.version = options;
-			}
 
-			if (typeof options === 'object') {
-				if (options.hasOwnProperty('version')) {
-					if (this.version < options.version && typeof options.version === 'number') {
-						this.version = options.version;
-						if (options.hasOwnProperty('description')) {
-							if (typeof options.description === 'string') {
-								this.description = options.description;
+			switch (typeof options) {
+				case 'number':
+					if (options <= this.version) {
+						throw Error('Older version!');
+					}
+					this._version = options;
+					break;
+				case 'object':
+					if (options.hasOwnProperty('version')) {
+						if (typeof options.version === 'number' && this._version < options.version) {
+							this._version = options.version;
+							if (options.hasOwnProperty('description')) {
+								if (typeof options.description === 'string') {
+									this._description = options.description;
+								}
+								else {
+									throw Error('Invalid Description!');
+								}
 							}
-							else {
-								throw Error('Invalid Description!');
+							if (options.hasOwnProperty('rating')) {
+								if (typeof options.rating === 'number' && options.rating > 0 && options.rating <= 10) {
+									this._rating = options.rating;
+								}
+								else {
+									throw Error('Invalid rating!');
+								}
 							}
-						}
-						if (options.hasOwnProperty('rating')) {
-							if (typeof options.rating === 'number' && options.rating > 0 && options.rating <= 10) {
-								this.rating = options.rating;
-							}
-							else {
-								throw Error('Invalid rating!');
-							}
+						} else {
+							throw Error('Invalid new version!');
 						}
 					} else {
 						throw Error('Invalid new version!');
 					}
-				} else {
-					throw Error('Invalid new version!');
-				}
+					break;
+				default:
+					throw Error('Not valid!');
 			}
 		}
 	}
@@ -112,7 +116,6 @@ function solve() {
 			let index = this._apps.findIndex(a => a.name === app.name);
 			if (index === -1) {
 				this._apps.push(createApp(app));
-				index = this._apps.findIndex(a => a.name === app.name);
 			} else {
 				if (this._apps[index].version < app.version) {
 					this._apps[index].description = app.description;
