@@ -98,17 +98,16 @@ function solve() {
 		}
 		uploadApp(app) {
 			if (!(app instanceof App)) {
-				throw Error('app must be App-like object!');
+				throw Error('app must be App object!');
 			}
-			let index = this.apps.findIndex(a => a.name === app.name);
+			let index = this._apps.findIndex(a => a.name === app.name);
 			if (index === -1) {
-				this.apps.push(new App(app.name, app.description, app.version, app.description));
-				index = this.apps.findIndex(a => a.name === app.name);
-				this.apps[index].time = timeUploaded.nextUpload();
+				this._apps.push(new App(app.name, app.description, app.version, app.description));
+				index = this._apps.findIndex(a => a.name === app.name);
 			} else {
-				if (this.apps[index].version < app.version) {
-					this.apps[index].description = app.description;
-					this.apps[index].rating = app.rating;
+				if (this._apps[index].version < app.version) {
+					this._apps[index].description = app.description;
+					this._apps[index].rating = app.rating;
 				}
 				else {
 					throw Error('App is already up to date!');
