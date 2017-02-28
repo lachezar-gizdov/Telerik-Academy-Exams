@@ -97,7 +97,7 @@ function solve() {
 			this._apps = value;
 		}
 		uploadApp(app) {
-			if (!(app instanceof App) || (app instanceof Store)) {
+			if (!(app instanceof App)) {
 				throw Error('app must be App-like object!');
 			}
 			let index = this.apps.findIndex(a => a.name === app.name);
