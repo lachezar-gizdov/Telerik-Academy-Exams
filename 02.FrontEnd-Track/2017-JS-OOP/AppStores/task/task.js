@@ -23,6 +23,15 @@ function solve() {
 			throw Error('Rating must be number between 1 and 10!');
 		}
 	}
+
+	function createApp(app) {
+		return {
+			name: app.name,
+			description: app.description,
+			version: app.version,
+			rating: app.rating,
+		};
+	}
 	class App {
 		constructor(name, description, version, rating) {
 			validateIfValueIsString(name);
@@ -102,7 +111,7 @@ function solve() {
 			}
 			let index = this._apps.findIndex(a => a.name === app.name);
 			if (index === -1) {
-				this._apps.push(new App(app.name, app.description, app.version, app.description));
+				this._apps.push(createApp(app));
 				index = this._apps.findIndex(a => a.name === app.name);
 			} else {
 				if (this._apps[index].version < app.version) {
