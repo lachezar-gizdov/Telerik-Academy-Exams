@@ -1,74 +1,52 @@
 function solve() {
 	// Your classes
-	let validatorForStringLength = function (value, upperLimit) {
+	function validatorForStringLength(value, upperLimit) {
 		if (value.length < 1 || value.length > upperLimit) {
 			throw Error('Invalid name length!');
 		}
-		if (value.match(!/[^a-zA-Z0-9 ]/)) {
+		if (!value.match(/^[a-zA-Z0-9 ]/)) {
 			throw Error('Invalid App name!');
 		}
-	};
-	let validateIfValueIsString = function (value) {
+	}
+	function validateIfValueIsString(value) {
 		if (typeof value !== 'string') {
 			throw Error('Invalid string!');
 		}
-	};
-	let timeUploaded = (function () {
-		let time = 0;
-		function nextUpload() {
-			time += 1;
-			return time;
+	}
+	function validateIfValueIsNumber(value) {
+		if (typeof value !== 'number' || value <= 0) {
+			throw Error('Version must be positive number!');
 		}
-		return {
-			nextUpload: nextUpload
-		};
-	})();
+	}
+	function validateRatingIfInRange(value) {
+		if (typeof value !== 'number' || value < 1 || value > 10) {
+			throw Error('Rating must be number between 1 and 10!');
+		}
+	}
 	class App {
 		constructor(name, description, version, rating) {
-			this.name = name;
-			this.description = description;
-			this.version = version;
-			this.rating = rating;
-			this.time = 0;
-		}
-		get time() {
-			return this._time;
-		}
-		set time(value) {
-			this._time = value;
+			validateIfValueIsString(name);
+			validatorForStringLength(name, 24);
+			validateIfValueIsString(description);
+			validateIfValueIsNumber(version);
+			validateRatingIfInRange(rating);
+
+			this._name = name;
+			this._description = description;
+			this._version = version;
+			this._rating = rating;
 		}
 		get name() {
 			return this._name;
 		}
-		set name(value) {
-			validateIfValueIsString(value);
-			validatorForStringLength(value, 24);
-			this._name = value;
-		}
 		get description() {
 			return this._description;
-		}
-		set description(value) {
-			validateIfValueIsString(value);
-			this._description = value;
 		}
 		get version() {
 			return this._version;
 		}
-		set version(value) {
-			if (typeof value !== 'number' || value < 1) {
-				throw Error('Version must be positive number!');
-			}
-			this._version = value;
-		}
 		get rating() {
 			return this._rating;
-		}
-		set rating(value) {
-			if (typeof value !== 'number' || value < 1 || value > 10) {
-				throw Error('Rating must be number between 1 and 10!');
-			}
-			this._rating = value;
 		}
 		release(options) {
 			if (typeof options === 'number' && options <= this.version) {
@@ -79,10 +57,10 @@ function solve() {
 			}
 
 			if (typeof options === 'object') {
-				if (options.hasOwnProperty(version)) {
+				if (options.hasOwnProperty('version')) {
 					if (this.version < options.version && typeof options.version === 'number') {
 						this.version = options.version;
-						if (options.hasOwnProperty(description)) {
+						if (options.hasOwnProperty('description')) {
 							if (typeof options.description === 'string') {
 								this.description = options.description;
 							}
@@ -90,7 +68,7 @@ function solve() {
 								throw Error('Invalid Description!');
 							}
 						}
-						if (options.hasOwnProperty(rating)) {
+						if (options.hasOwnProperty('rating')) {
 							if (typeof options.rating === 'number' && options.rating > 0 && options.rating <= 10) {
 								this.rating = options.rating;
 							}
@@ -110,7 +88,7 @@ function solve() {
 	class Store extends App {
 		constructor(name, description, version, rating) {
 			super(name, description, version, rating);
-			this.apps = [];
+			this._apps = [];
 		}
 		get apps() {
 			return this._apps;
@@ -172,30 +150,23 @@ function solve() {
 	}
 	class Device {
 		constructor(hostname, apps) {
-			this.hostname = hostname;
-			this.apps = [];
+			validateIfValueIsString(hostname);
+			validatorForStringLength(hostname, 32);
+
+			if (!(Array.isArray(apps))) {
+				throw Error('Invalid app collection!');
+			}
+			if (!apps.every(a => a instanceof App)) {
+				throw Error('There is un Invalid app in the passed collection!');
+			}
+			this._hostname = hostname;
+			this._apps = [];
 		}
 		get hostname() {
 			return this._hostname;
 		}
-		set hostname(value) {
-			validatorForStringLength(value, 32);
-			validateIfValueIsString(value);
-			this._hostname = value;
-		}
 		get apps() {
 			return this._apps;
-		}
-		set apps(value) {
-			if (!(Array.isArray(value))) {
-				throw Error('Invalid app collection!');
-			}
-			value.forEach(function (element) {
-				if (!((element instanceof App) || (element instanceof Store))) {
-					throw Error('There is un Invalid app in the passed collection!');
-				}
-			});
-			this._apps = value;
 		}
 		search(pattern) {
 			let stores = this.apps.filter(a => a instanceof Store),
