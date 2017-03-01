@@ -175,7 +175,7 @@ function solve() {
 			}
 
 			this._hostname = hostname;
-			this._apps = [];
+			this._apps = apps.map(x => createApp(x));
 			this._stores = apps.filter(x => x instanceof Store).map(x => createApp(x));
 		}
 
@@ -208,6 +208,7 @@ function solve() {
 			return Object.keys(result).sort().map(key => result[key]);
 
 		}
+		
 		install(name) {
 			let bestApp = { version: -1 };
 
@@ -233,6 +234,7 @@ function solve() {
 			}
 			return this;
 		}
+
 		uninstall(name) {
 			let index = this._apps.findIndex(a => a.name === name);
 
@@ -250,9 +252,11 @@ function solve() {
 
 			return this;
 		}
+
 		listInstalled() {
 			return (this._apps.slice().sort((x, y) => x.name.localeCompare(y.name)));
 		}
+		
 		update() {
 			this._apps = this._apps.map(app => {
 				const name = app.name;
@@ -261,7 +265,7 @@ function solve() {
 
 				this._stores.forEach(store => {
 					const currApp = store.apps.find(x => x.name === name);
-					
+
 					if (currApp && bestApp.version < currApp.version) {
 						bestApp = currApp;
 					}
