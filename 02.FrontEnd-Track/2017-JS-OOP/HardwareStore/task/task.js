@@ -81,9 +81,11 @@ function solve() {
 			}
 			this._screenSize = value;
 		}
+		
 		get operatingSystem() {
 			return this._operatingSystem;
 		}
+
 		set operatingSystem(value) {
 			if (typeof value !== 'string') {
 				throw Error;
@@ -93,6 +95,7 @@ function solve() {
 			}
 			this._operatingSystem = value;
 		}
+
 		get className() {
 			return this._className;
 		}
@@ -281,7 +284,7 @@ function solve() {
 
 		search(options) {
 			if (typeof options === 'string') {
-				let pattern = options.toLocaleLowerCase();
+				let pattern = options.toLowerCase();
 				let flags = {};
 				let uniques = this.products.filter(function (product) {
 					if (flags[product.id]) {
@@ -293,8 +296,8 @@ function solve() {
 				let counter = 0;
 
 				return uniques
-					.filter(p => p.manufacturer.toLocaleLowerCase().indexOf(pattern) >= 0
-						|| p.model.toLocaleLowerCase().indexOf(pattern) >= 0).map(p => {
+					.filter(p => p.manufacturer.toLowerCase().indexOf(pattern) >= 0
+						|| p.model.toLowerCase().indexOf(pattern) >= 0).map(p => {
 							counter = 0;
 							this.products.forEach(function (product) {
 								if (product.id === p.id) {
