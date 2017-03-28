@@ -1,9 +1,9 @@
 function solve() {
 
-	return function (selector) {
+	return function (selector, defaultLeft, defaultRight) {
 		var element = document.querySelector(selector);
-		var defaultLeft = defaultLeft || [];
-		var defaultRight = defaultRight || [];
+		defaultLeft = defaultLeft || [];
+		defaultRight = defaultRight || [];
 
 		var docFragment = document.createDocumentFragment();
 
@@ -109,35 +109,37 @@ function solve() {
 		inputField.setAttribute("autofocus", "");
 		docFragment.appendChild(inputField);
 		inputField.addEventListener('keypress', function (ev) {
-			if (!inputField.value) {
-				return;
-			}
-			var li = document.createElement("li");
-			li.className = "entry";
-			li.innerText = inputField.value;
-			li.appendChild(removeImg.cloneNode(true));
-
-			li.addEventListener("click", function (event) {
-				var target = event.target;
-
-				if (target.className === "delete") {
-					target = target.parentNode;
-					inputField.value = target.innerText;
-					target.parentNode.removeChild(target);
+			if (ev.keyCode === 13) {
+				if (!inputField.value) {
+					return;
 				}
-			});
+				var li = document.createElement("li");
+				li.className = "entry";
+				li.innerText = inputField.value;
+				li.appendChild(removeImg.cloneNode(true));
 
-			rightOl.appendChild(li);
+				li.addEventListener("click", function (event) {
+					var target = event.target;
 
-			var selectedRadio = document.querySelector('input[name = "column-select"]:checked');
+					if (target.className === "delete") {
+						target = target.parentNode;
+						inputField.value = target.innerText;
+						target.parentNode.removeChild(target);
+					}
+				});
 
-			if (selectedRadio.id === "select-left-column") {
-				leftOl.appendChild(li);
-			} else {
 				rightOl.appendChild(li);
-			}
 
-			inputField.value = "";
+				var selectedRadio = document.querySelector('input[name = "column-select"]:checked');
+
+				if (selectedRadio.id === "select-left-column") {
+					leftOl.appendChild(li);
+				} else {
+					rightOl.appendChild(li);
+				}
+
+				inputField.value = "";
+			}
 		});
 
 		var button = document.createElement("button");
