@@ -70,7 +70,8 @@ function solve() {
 
 				if (target.className === "delete") {
 					target = target.parentNode;
-					inputField.value = target.innerText;
+					target.removeChild(event.target);
+					inputField.value = target.innerHTML.trim();
 					target.parentNode.removeChild(target);
 				}
 			});
@@ -94,7 +95,8 @@ function solve() {
 
 				if (target.className === "delete") {
 					target = target.parentNode;
-					inputField.value = target.innerText;
+					target.removeChild(event.target);
+					inputField.value = target.innerHTML.trim();
 					target.parentNode.removeChild(target);
 				}
 			});
@@ -123,7 +125,8 @@ function solve() {
 
 					if (target.className === "delete") {
 						target = target.parentNode;
-						inputField.value = target.innerText;
+						target.removeChild(event.target);
+						inputField.value = target.innerHTML.trim();
 						target.parentNode.removeChild(target);
 					}
 				});
@@ -159,6 +162,7 @@ function solve() {
 
 				if (target.className === "delete") {
 					target = target.parentNode;
+					target.removeChild(event.target);
 					inputField.value = target.innerText;
 					target.parentNode.removeChild(target);
 				}
