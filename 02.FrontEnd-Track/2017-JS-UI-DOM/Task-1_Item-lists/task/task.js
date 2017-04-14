@@ -62,7 +62,7 @@ function solve() {
 			var li = document.createElement("li");
 			li.className = "entry";
 			li.appendChild(removeImg.cloneNode(true));
-			li.innerText = element;
+			li.innerHTML = element;
 			li.appendChild(removeImg.cloneNode(true));
 
 			li.addEventListener("click", function (event) {
@@ -86,7 +86,7 @@ function solve() {
 		defaultRight.forEach(function (element) {
 			var li = document.createElement("li");
 			li.className = "entry";
-			li.innerText = element;
+			li.innerHTML = element;
 
 			li.appendChild(removeImg.cloneNode(true));
 
@@ -110,41 +110,7 @@ function solve() {
 		inputField.setAttribute("size", "40");
 		inputField.setAttribute("autofocus", "");
 		docFragment.appendChild(inputField);
-		inputField.addEventListener('keypress', function (ev) {
-			if (ev.keyCode === 13) {
-				if (!inputField.value) {
-					return;
-				}
-				var li = document.createElement("li");
-				li.className = "entry";
-				li.innerText = inputField.value;
-				li.appendChild(removeImg.cloneNode(true));
-
-				li.addEventListener("click", function (event) {
-					var target = event.target;
-
-					if (target.className === "delete") {
-						target = target.parentNode;
-						target.removeChild(event.target);
-						inputField.value = target.innerHTML.trim();
-						target.parentNode.removeChild(target);
-					}
-				});
-
-				rightOl.appendChild(li);
-
-				var selectedRadio = document.querySelector('input[name = "column-select"]:checked');
-
-				if (selectedRadio.id === "select-left-column") {
-					leftOl.appendChild(li);
-				} else {
-					rightOl.appendChild(li);
-				}
-
-				inputField.value = "";
-			}
-		});
-
+		
 		var button = document.createElement("button");
 		button.innerHTML = "Add";
 
@@ -154,7 +120,7 @@ function solve() {
 			}
 			var li = document.createElement("li");
 			li.className = "entry";
-			li.innerText = inputField.value;
+			li.innerHTML = inputField.value;
 			li.appendChild(removeImg.cloneNode(true));
 
 			li.addEventListener("click", function (event) {
@@ -163,7 +129,7 @@ function solve() {
 				if (target.className === "delete") {
 					target = target.parentNode;
 					target.removeChild(event.target);
-					inputField.value = target.innerText;
+					inputField.value = target.innerText.Trim();
 					target.parentNode.removeChild(target);
 				}
 			});
