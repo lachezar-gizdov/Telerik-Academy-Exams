@@ -1,0 +1,29 @@
+﻿Bugs:
+
+#1 In the CreateUser method, the parameters username and email are in the wrong order
+#2
+#3
+#4
+i think i fixed more than 1 bug, but forgot to document it :D
+
+Bottleneck:
+
+#1
+while (DateTime.Now < end);
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                cmd += parameters[i].ToString().ToLower();
+            }
+
+the while loop is pointless, instead just apply ToLower method to the command string.
+
+------------------------------------
+I see no point in this code snippet
+if(cl.Split(' ').Count() > 10)
+            {
+                throw new ArgumentException();
+            }
+--------------------------------
+this line should be uncommented in order to log errors in the file
+//log.Error(msg);
