@@ -50,9 +50,6 @@
       <HintPath>..\packages\Ninject.Extensions.Conventions.3.2.0.0\lib\net45-full\Ninject.Extensions.Conventions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ninject.Extensions.Factory, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.Extensions.Factory.3.2.1.0\lib\net45-full\Ninject.Extensions.Factory.dll</HintPath>
-    </Reference>
     <Reference Include="Ninject.Extensions.Interception, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.Extensions.Interception.3.2.0.0\lib\net45-full\Ninject.Extensions.Interception.dll</HintPath>
       <Private>True</Private>
@@ -70,8 +67,6 @@
     <Compile Include="Configs\ConfigurationProvider.cs" />
     <Compile Include="Configs\IConfigurationProvider.cs" />
     <Compile Include="Configs\NinjectManagerModule.cs" />
-    <Compile Include="Interceptors\LogErrorInterceptor.cs" />
-    <Compile Include="Interceptors\PrintInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -79,7 +74,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interceptors\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProjectManager.Framework\ProjectManager.Framework.csproj">
       <Project>{6d548169-75e7-495f-bc01-0c8cf6f6be04}</Project>

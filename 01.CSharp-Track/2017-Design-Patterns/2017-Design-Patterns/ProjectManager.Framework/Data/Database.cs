@@ -1,16 +1,34 @@
 ﻿using System.Collections.Generic;
+using System;
 using ProjectManager.Framework.Data;
 using ProjectManager.Framework.Data.Models;
 
 namespace ProjectManager.Data
 {
+    // You are not allowed to modify this class (not even to remove this comment)
     public class Database : IDatabase
     {
         private IList<Project> projects;
 
-        public Database()
+        private static Database instance;
+
+        private Database()
         {
             this.projects = new List<Project>();
+        }
+
+        // Singleton design pattern
+        public static Database Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Database();
+                }
+
+                return instance;
+            }
         }
 
         public IList<Project> Projects

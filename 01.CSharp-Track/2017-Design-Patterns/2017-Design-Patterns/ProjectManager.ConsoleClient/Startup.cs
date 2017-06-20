@@ -1,6 +1,6 @@
-﻿using Ninject;
-using ProjectManager.Configs;
-using ProjectManager.Framework.Core.Common.Contracts;
+﻿using ProjectManager.ConsoleClient.Configs;
+using ProjectManager.Framework.Core;
+using ProjectManager.Framework.Core.Common.Providers;
 using ProjectManager.Framework.Services;
 
 namespace ProjectManager.ConsoleClient
@@ -9,14 +9,16 @@ namespace ProjectManager.ConsoleClient
     {
         public static void Main()
         {
-            IKernel kernel = new StandardKernel(new NinjectManagerModule());
+            var configProvider = new ConfigurationProvider();
 
-            // This is an example of how to create the caching service.Think about how and where to use it in the project.
-            ICachingService cacheService = kernel.Get<ICachingService>();
+            // This is an example of how to create the caching service. Think about how and where to use it in the project.
+            var cacheService = new CachingService(configProvider.CacheDurationInSeconds);
 
-            IEngine engine = kernel.Get<IEngine>();
+            var fileLogger = new FileLogger(configProvider.LogFilePath);
 
-            engine.Start(); 
+            var engine = new Engine(fileLogger);
+
+            engine.Start();
         }
     }
 }

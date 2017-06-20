@@ -1,25 +1,21 @@
-﻿using Ninject;
-using ProjectManager.Framework.Core.Commands.Contracts;
+﻿using ProjectManager.Framework.Core.Commands.Contracts;
 using ProjectManager.Framework.Core.Common.Exceptions;
 using ProjectManager.Framework.Data;
 using ProjectManager.Framework.Data.Factories;
-using ProjectManager.Framework.Services;
+using ProjectManager.Framework.Core.Commands.Creational;
+using ProjectManager.Framework.Core.Commands.Listing;
+using ProjectManager.Framework.Core.Common.Providers;
 
 namespace ProjectManager.Framework.Core.Commands.Factories
 {
     public class CommandsFactory : ICommandsFactory
     {
         private readonly IDatabase database;
-        private readonly IModelsFactory factory;
-        private readonly ICachingService cachingService;
-        private readonly IKernel kernel;
+        private readonly ModelsFactory factory;
 
-        public CommandsFactory(IDatabase database, IModelsFactory modelsFactory, ICachingService cachingService, IKernel kernel)
+        public CommandsFactory()
         {
-            this.factory = modelsFactory;
-            this.database = database;
-            this.cachingService = cachingService;
-            this.kernel = kernel;
+            this.factory = factory ?? new ModelsFactory(new Validator());
         }
 
         public ICommand GetCommandFromString(string commandName)
@@ -41,30 +37,29 @@ namespace ProjectManager.Framework.Core.Commands.Factories
             }
         }
 
-
         public ICommand CreateProjectCommand()
         {
-            return kernel.Get<ICommand>("Project");
+            return new CreateProjectCommand(this.factory);
         }
 
         public ICommand CreateUserCommand()
         {
-            return kernel.Get<ICommand>("User");
+            return new CreateUserCommand(this.factory);
         }
 
         public ICommand CreateTaskCommand()
         {
-            return kernel.Get<ICommand>("Task");
+            return new CreateTaskCommand(this.factory);
         }
 
         public ICommand ListProjectCommand()
         {
-            return kernel.Get<ICommand>("ListProjects");
+            return new ListProjectsCommand();
         }
 
         public ICommand ListProjectDetailsCommand()
         {
-            return kernel.Get<ICommand>("ListProjectDetails");
+            return new ListProjectDetailsCommand();
         }
     }
 }

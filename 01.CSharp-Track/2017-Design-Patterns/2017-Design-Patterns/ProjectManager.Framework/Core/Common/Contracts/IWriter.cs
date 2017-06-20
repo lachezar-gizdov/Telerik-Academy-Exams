@@ -2,8 +2,8 @@
 {
     public interface IWriter
     {
-        void Write(string message);
+        void Write(object value);
 
-        void WriteLine(string message);
+        void WriteLine(object value);
     }
 }

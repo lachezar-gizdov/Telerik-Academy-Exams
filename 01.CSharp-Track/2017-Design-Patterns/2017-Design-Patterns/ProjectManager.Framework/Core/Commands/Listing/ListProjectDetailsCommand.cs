@@ -11,8 +11,7 @@ namespace ProjectManager.Framework.Core.Commands.Listing
     {
         private const int ParameterCountConstant = 1;
 
-        public ListProjectDetailsCommand(IDatabase database) :
-            base(database)
+        public ListProjectDetailsCommand()
         {
         }
 

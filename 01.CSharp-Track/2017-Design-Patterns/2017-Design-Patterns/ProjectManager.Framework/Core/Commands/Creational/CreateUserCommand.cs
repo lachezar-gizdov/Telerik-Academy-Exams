@@ -13,8 +13,8 @@ namespace ProjectManager.Framework.Core.Commands.Creational
     {
         private const int ParameterCountConstant = 3;
 
-        public CreateUserCommand(IDatabase database, IModelsFactory factory) 
-            : base(database, factory)
+        public CreateUserCommand(ModelsFactory factory) 
+            : base(factory)
         {
         }
 

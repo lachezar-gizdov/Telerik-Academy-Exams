@@ -11,8 +11,8 @@ namespace ProjectManager.Framework.Core.Commands.Creational
     {
         private const int ParameterCountConstant = 4;
 
-        public CreateTaskCommand(IDatabase database, IModelsFactory factory) 
-            : base(database, factory)
+        public CreateTaskCommand(ModelsFactory factory) 
+            : base(factory)
         {
         }
 

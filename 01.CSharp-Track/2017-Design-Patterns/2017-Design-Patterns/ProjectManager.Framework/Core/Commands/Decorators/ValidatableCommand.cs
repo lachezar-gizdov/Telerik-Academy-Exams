@@ -1,6 +1,9 @@
-﻿using System;
+﻿using ProjectManager.Framework.Core.Commands.Contracts;
+using System;
 using System.Collections.Generic;
-using ProjectManager.Framework.Core.Commands.Contracts;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectManager.Framework.Core.Commands.Decorators
 {
@@ -17,7 +20,7 @@ namespace ProjectManager.Framework.Core.Commands.Decorators
         {
             get
             {
-                return this.command.ParameterCount;
+                throw new NotImplementedException();
             }
         }
 

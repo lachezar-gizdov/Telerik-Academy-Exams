@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Bytes2you.Validation;
 using ProjectManager.Framework.Core.Commands.Contracts;
 using ProjectManager.Framework.Core.Common.Exceptions;
 using ProjectManager.Framework.Data;
+using ProjectManager.Data;
 
 namespace ProjectManager.Framework.Core.Commands.Abstracts
 {
     public abstract class Command : ICommand
     {
-        protected readonly IDatabase Database;
+        protected readonly Database Database;
 
-        public Command(IDatabase database)
+        public Command()
         {
-            Guard.WhenArgument(database, "Database").IsNull().Throw();
-
-            this.Database = database;
+            this.Database = Database.Instance;
         }
 
         public abstract int ParameterCount

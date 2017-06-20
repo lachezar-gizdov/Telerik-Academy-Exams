@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using ProjectManager.Framework.Core.Commands.Abstracts;
 using ProjectManager.Framework.Core.Commands.Contracts;
 using ProjectManager.Framework.Core.Common.Exceptions;
@@ -12,8 +13,8 @@ namespace ProjectManager.Framework.Core.Commands.Creational
     {
         private const int ParameterCountConstant = 4;
 
-        public CreateProjectCommand(IDatabase database, IModelsFactory factory)
-            : base(database, factory)
+        public CreateProjectCommand(ModelsFactory factory)
+            : base(factory)
         {
         }
 

@@ -1,33 +1,40 @@
 ﻿using System.Linq;
+
 using Bytes2you.Validation;
-using ProjectManager.Framework.Core.Commands.Contracts;
 using ProjectManager.Framework.Core.Common.Contracts;
 using ProjectManager.Framework.Core.Common.Exceptions;
+using ProjectManager.Framework.Core.Commands.Factories;
 
 namespace ProjectManager.Framework.Core.Common.Providers
 {
-    public class CommandProcessor : IProcessor
+    public class CommandProcessor
     {
-        private ICommandsFactory commandsFactory;
-        private ILogger logger;
-        private IWriter writer;
+        private CommandsFactory commandFactory;
 
-        public CommandProcessor(ICommandsFactory commandsFactory, ILogger logger, IWriter writer)
+        public CommandProcessor(CommandsFactory commandFactory)
         {
-            Guard.WhenArgument(commandsFactory, "CommandProcessor CommandsFactory").IsNull().Throw();
-            Guard.WhenArgument(logger, "CommandProcessor Logger").IsNull().Throw();
-
-            this.commandsFactory = commandsFactory;
-            this.logger = logger;
-            this.writer = writer;
+            this.commandFactory = commandFactory;
         }
 
-        public void ProcessCommand(string commandLine)
+        public CommandsFactory CommandFactory
+        {
+            get
+            {
+                return this.commandFactory;
+            }
+
+            set
+            {
+                Guard.WhenArgument(value, "CommandProcessor CommandsFactory").IsNull().Throw();
+                this.commandFactory = value;
+            }
+        }
+
+        public string ProcessCommand(string commandLine)
         {
             if (string.IsNullOrWhiteSpace(commandLine))
             {
-                this.logger.Error("No command has been provided!");
-                 throw new UserValidationException("No command has been provided!");
+                throw new UserValidationException("No command has been provided!");
             }
 
             var commandName = commandLine.Split(' ')[0];
@@ -36,9 +43,9 @@ namespace ProjectManager.Framework.Core.Common.Providers
                 .Skip(1)
                 .ToList();
 
-            var command = this.commandsFactory.GetCommandFromString(commandName);
+            var command = this.CommandFactory.GetCommandFromString(commandName);
 
-            this.writer.WriteLine(command.Execute(commandParameters));
+            return command.Execute(commandParameters);
         }
     }
 }

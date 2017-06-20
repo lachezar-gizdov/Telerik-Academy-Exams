@@ -8,7 +8,7 @@ using ProjectManager.Framework.Data.Models.States;
 
 namespace ProjectManager.Framework.Data.Factories
 {
-    public class ModelsFactory : IModelsFactory
+    public class ModelsFactory
     {
         private readonly IValidator validator;
 
